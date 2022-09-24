@@ -1,0 +1,43 @@
+{
+    "compilerOptions": {
+      "outDir": "./dist/",
+      "sourceMap": true,
+      "noImplicitAny": false,
+      "allowJs": true,
+
+//      "target": "es5",
+      "module": "es2020",
+      "noLib": false,
+      "target": "es6",
+      "lib": [
+        "es6",
+        "dom"
+      ],
+      "types": ["node"],
+
+      "moduleResolution": "node",
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "removeComments": false,
+      "allowSyntheticDefaultImports": true,
+//      "typeRoots": [
+//        "../node_modules/@types"
+//      ],
+//      "types" : [
+//        "core-js"
+//      ]
+    },
+    "include": [
+      "./typings/*.d.ts",
+      "./node_modules/framework7/js/framework7.d.ts",
+      "./node_modules/@types/pouchdb/index.d.ts",
+      "./node_modules/@types/pouchdb-find/index.d.ts",
+//      "./cordova/plugins/phonegap-plugin-push/types/*.d.ts",
+      "./cordova/node_modules/cordova-plugin-network-information/types/*.d.ts",
+      "./cordova/node_modules/@havesource/cordova-plugin-push/types/*.d.ts",
+      "./src/**/*"
+    ],
+    "exclude": [
+      "node_modules"
+    ]
+}

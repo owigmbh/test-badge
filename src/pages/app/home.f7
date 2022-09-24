@@ -1,0 +1,479 @@
+<template>
+  <div class="page" data-name="home" id="pgHome">
+    <div class="page-content">
+${banner && !recipes && !showOpening ? $h`
+      <div class="banner ${banner.type} card" @click="${() => openProduct()}">
+          <div class="card-header">${$f7.mod.helper.lng('promotion')}</div>
+          <div class="card-content">
+            <img src="${banner.img}"/>
+            <span>${banner.titleOverride ? banner.titleOverride : banner.title}</span>
+          </div>
+      </div>
+` : ''}
+${treatment && !recipes && !showOpening ? $h`
+      <div class="treatment card">
+        <div class="card-header">${treatment.title}</div>
+        <div class="card-content" innerHTML="${treatment.txt}"></div>
+      </div>
+` : ''}
+${!treatment && !recipes && !banner && !showOpening ? $h
+    `<div class="card">
+        <div class="card-header">${welcome} ${$f7.store.state.user.doc ? $f7.store.state.user.doc.firstname : ''}</div>
+    </div>
+    ${tipp ? $h
+    `<div class="card tipp">
+        <div class="card-header">
+            ${getCat(tipp.category)}
+            <a href="#" @click="${() => nextTipp()}" title="$f7.mod.helper.lng('next')" class="f7-icons">arrow_2_circlepath</a>
+        </div>
+        <div class="card-content card-content-padding">
+            ${tipp.title && $h`<b innerHTML="${tipp.title}"></b>`}
+            <div innerHTML="${$f7.mod.helper.cutText(tipp.txt)}"></div>
+        </div>
+        <div class="card-footer justify-content-center">
+            <a href="#" @click="${() => listRecipes()}">${$f7.mod.helper.lng('recipes')}</a>
+        </div>
+    </div>`
+    : ''}`
+: ''}
+${!treatment && !recipes && !showOpening ? $h
+    `<div class="card"><a class="button button-raised button-fill" @click="${() => goto()}">${$f7.mod.helper.lng('proposal')}</a></div>`
+: ''}
+${docs && !recipes && !showOpening ? $h`
+    ${docs.map((obj) => $h`
+      <div class="article card">
+          <div class="card-header" @click="${(e) => showArticle(e)}">${obj.title} ${docs.length > 1 ? $h`<i class="f7-icons right-rel">chevron_down</i>` : ''}</div>
+          <div class="card-content hide ${docs.length == 1 ? $h`display-block` : ''}" innerHTML="${obj.txt}">
+
+        ${obj.productLinks && $h`
+          ${obj.productLinks.map((item, k) => $h`
+            <div class="card prodLink">
+              <div class="card-header align-items-flex-end">${item.title}</div>
+              <div class="card-content card-content-padding">
+                <img src="${item.pic}" />
+                ${item.web && $h`
+                  <a href="${item.web}" class="link external" target="_blank">${item.txt}</a>
+                `}
+              </div>
+              <div class="card-footer" @click="${() => $f7.views.main.router.navigate('/product/order/' + item._id)}">
+                CHF ${$f7.mod.helper.displayMoney(item.price)}
+                <span class="order-it">
+                    <span>${$f7.mod.helper.lng('order')}</span>
+                </span>
+              </div>
+            </div>
+          `)}
+        `}
+        </div>
+      </div>
+    `)}
+` : ''}
+
+${recipes ? $h`
+    ${recipes.map((item) => $h
+        `<div class="card tipp">
+            <div class="card-header" @click="${(e) => expandTip(e)}">
+                <span innerHTML="${item.doc.title.replace(/\(/, '<br/>(')}"></span>
+                <a href="#" class="f7-icons right-rel">arrow_2_circlepath</a>
+            </div>
+            <div class="card-content card-content-padding hide" innerHTML="${item.doc.txt}"></div>
+        </div>`
+    )}
+        <a href="#" @click="${() => $f7.views.main.router.navigate('/', {reloadCurrent: true})}" class="margin-left">${$f7.mod.helper.lng('back')}</a>`
+: ''}
+
+${showOpening ? $h`
+<div style="padding: 5px">
+    <h3>${$store.state.settings.title}</h3>
+    <div class="display-flex">
+        <div innerHTML="${$store.state.settings.address}"></div>
+        <div class="half-w-evenly">
+            ${$store.state.settings.www && $h`<a href="${$store.state.settings.www}" target="_blank" class="external f7-icons" title="${$f7.mod.helper.lng('web')}">globe</a>`}
+            <a href="tel:${$store.state.settings.phone.replace(' ', '')}" class="f7-icons external" target="_blank">phone_circle</a>
+        </div>
+    </div>
+    ${$store.state.settings.phoneEmergency && $store.state.settings.phoneEmergency.length > 0 && $h`
+        <br/>
+        <h3>${$f7.mod.helper.lng('phoneEmergency')}</h3>
+        ${$store.state.settings.phoneEmergency.map((item) => $h
+            `${item.title} : <a href="tel:${item.txt}">${item.txt}</a><br/>`
+        )}
+    `}
+    <br/><br/>
+    <h3>${$f7.mod.helper.lng('openTimes')}</h3>
+    <table class="openingTimes full-width">
+      ${$store.state.settings.openings.map((item, k) => $h`
+      <tr>
+        <td>${$f7.mod.helper.lng('d_' + k)}</td>
+        ${item.s1 ? $h`
+        <td>${$f7.mod.helper.displayTime(item.s1)} - ${$f7.mod.helper.displayTime(item.e1)}</td>
+        <td></td>
+        `
+        : $h`<td colspan="2">${$f7.mod.helper.lng('closed')}</td>`
+        }
+        ${item.s2 ? $h`
+        <td>${$f7.mod.helper.displayTime(item.s2)} - ${$f7.mod.helper.displayTime(item.e2)}</td>
+        `
+        : $h`<td colspan="2">${$f7.mod.helper.lng('closed')}</td>`
+        }
+      </tr>
+      `)}
+    </table>
+    <br/>
+    <h3>${$f7.mod.helper.lng('holidays')}</h3>
+    <table>
+      <tr>
+          <th class="left">${$f7.mod.helper.lng('start')}</th>
+          <th class="left">${$f7.mod.helper.lng('end')}</th>
+          <th class="left">${$f7.mod.helper.lng('deputy')}</th>
+      </tr>
+    ${$store.state.settings.holidays.map((item) => $h`
+    <tr>
+      <td>${$f7.mod.helper.showDate(item.d_start)}</td>
+      <td>${$f7.mod.helper.showDate(item.d_end)}</td>
+      <td>${item.partnerName}</td>
+    </tr>
+    `)}
+    </table>
+    <br/>
+    <h3>${$f7.mod.helper.lng('bankInfo')}</h3>
+    <span innerHTML="${$f7.store.state.settings.bankInfo}"/>
+</div>
+` : ''}
+        </div>
+      </div>
+</template>
+<script>
+export default (props, { $f7, $on, $update, $store }) => {
+    let noCon = true;
+    let banner, docs, list, treatment, showOpening = false, error, isLoaded = false, welcome = '', openings, tipp, categories, recipes;
+    let promises = [];
+
+    const getCat = function (cat) {
+        if(categories) {
+            let tmp = categories.find(s => s.value == cat);
+            if(tmp) {
+                return tmp.label;
+            } else {
+                return '';
+            }
+        }
+    };
+
+    const intLink = function (e) {
+        $f7.store.dispatch('intLink', e);
+    };
+
+    //get articles from db
+    const getMine = function () {
+        if ($f7.store.state.user.doc && $f7.store.state.user.doc.articles && $f7.store.state.user.doc.articles.length > 0) {
+            if ($f7.store.state.user.doc.articles && $f7.store.state.user.doc.articles.length > 0) {
+                $f7.mod.article.getBulk($f7.store.state.user.doc.articles)
+                    .then(rs => {
+                        docs = [];
+
+                        rs.rows.map((res) => {
+                            if (!res.value.deleted) {
+                                let doc = res.doc;
+
+                                if (doc.productLinks && doc.productLinks.length > 0) {
+                                    for (let i in doc.productLinks) {
+//                                if (typeof doc.productLinks[i] == "number") {
+                                        promises.push(
+                                            new Promise(res2 => {
+                                                let idx = i;
+
+                                                $f7.mod.product.get(doc.productLinks[idx])
+                                                    .then(rs2 => {
+                                                        doc.productLinks[idx] = rs2;
+                                                        res2(true);
+                                                    })
+                                                    .catch(ex => {
+                                                        console.log(ex);
+                                                        res2(true);
+                                                    });
+                                            })
+                                        );
+                                    }
+                                }
+
+                                docs.push(doc);
+                            }
+                        });
+
+                        Promise.all(promises).then(() => {
+                            $update();
+                        });
+                    })
+                    .catch(ex => {
+                        error = $f7.mod.helper.lng('errValid.docNotAvailable');
+
+                        $update();
+                    });
+
+            } else {
+                $update();
+            }
+        } else {
+            error = $f7.mod.helper.lng('noTreatmentAssigned');
+
+            $update().then(() => {
+                $f7.$('.more').click(moreTips);
+            });
+        }
+    };
+
+    const showArticle = function (e) {
+        let obj = $f7.$(e.currentTarget.nextElementSibling);
+        let parent = $f7.$(e.currentTarget).find('i');
+
+        if(obj.hasClass('hide')) {
+            obj.removeClass('hide');
+            parent.html('chevron_up');
+
+        } else {
+            obj.addClass('hide');
+            parent.html('chevron_down');
+        }
+    };
+
+    const expandTip = function (e) {
+        let obj = $f7.$(e.currentTarget).next();
+
+        if(obj.css('display') == 'none') {
+            obj.removeClass('hide');
+
+        } else {
+            obj.addClass('hide');
+        }
+    };
+
+    const moreTips = function (e) {
+        e.currentTarget.parentElement.innerHTML = tipp.txt;
+    };
+
+    const openProduct = function () {
+        let id = banner.id;
+        let title = banner.titleOverride ? banner.titleOverride : 'no';
+        $f7.store.dispatch('goto', '/product/show/' + id + '/' +  title);
+    };
+
+    const goto = function () {
+        $f7.store.dispatch('goto', '/create-appointment/');
+    };
+
+    const orderProd = function (i, id) {
+        let doc = {
+            refId: id,
+            amount: parseInt($f7.$('#orderBox' + i).val()),
+            delivery: 'post',
+            status: 'open'
+        };
+
+        $f7.mod.order.save(doc)
+            .then(res => {
+                $f7.dialog.alert($f7.mod.helper.lng('orderSuccessTxt')
+                        .replace('$n$', doc.amount)
+                        .replace('$product$', $f7.$('.card-header')[i].innerText),
+                    $f7.mod.helper.lng('orderSuccess')
+                );
+
+                //replicate to srv
+                $f7.store.dispatch('replicate', true);
+            })
+            .catch(ex => $f7.store.dispatch('catchDb', ex));
+    };
+
+    const listRecipes = function () {
+        $f7.mod.tipsTricks.getRecipes()
+            .then((rs) => {
+                recipes = rs.rows;
+                $update();
+                $f7.$('.more').click(moreTips);
+            });
+    };
+
+    const nextTipp = function () {
+        $f7.mod.tipsTricks.getRandomEntry()
+            .then((rs) => {
+                tipp = rs;
+                $update();
+                $f7.$('.more').click(moreTips);
+            });
+    };
+
+    $on('pageInit', () => {
+        let m = $f7.$('.navbar a');
+        m.removeClass('active');
+
+        let b = new Date($f7.store.state.user.birthday);
+        let d = new Date();
+        let tmp = 'goodMorning';
+
+        //if geburi
+        if (d.getDate() == b.getDate() && d.getMonth() == b.getMonth()) {
+            tmp = 'happyBirthday';
+            //if sivlester
+        } else if (d.getDate() == 1 && d.getMonth() == 1) {
+            tmp = 'silvester';
+
+        } else if (d.getHours() >= 11 && d.getHours() <= 16) {
+            tmp = 'goodAfternoon';
+
+        } else if (d.getHours() >= 17 || d.getHours() < 6) {
+            tmp = 'goodEvening';
+        }
+        welcome = $f7.mod.helper.lng(tmp);
+
+        if ($f7.router.currentRoute.query && $f7.router.currentRoute.query.action == 'paySucc') {
+            $f7.$(m[4]).addClass('active');
+            var m2 = $f7.$('.panel-right a .item-title');
+            m2.removeClass('active');
+            $f7.$('.panel-right .item-link .payment').addClass('active');
+
+            console.log('payment succeeded');
+
+        } else if ($f7.views.main.router.currentRoute.path == '/list-openings/1') {
+            $f7.$(m[4]).addClass('active');
+            var m2 = $f7.$('.panel-right a .item-title');
+            m2.removeClass('active');
+            $f7.$('.panel-right .item-link .opening').addClass('active');
+
+            showOpening = true;
+
+            $update()
+                .then(() => {
+                    //move sunday to bottom of table
+                    let t = $f7.$('.openingTimes')[0];
+                    t.appendChild(t.firstChild);
+                    t.firstChild.remove();
+                });
+
+        } else if ($f7.store.state.user && $f7.views.main.router.currentRoute.path != '/list-partners/') {
+            // $f7.$(m[1]).addClass('active');
+
+            //load treatment
+            promises.push(
+                new Promise(res => {
+                    $f7.mod.user.getTreatment()
+                        .then(doc => {
+                            if (!doc.d_deleted) {
+                                treatment = doc;
+                            }
+
+                            res(true);
+                        })
+                        .catch(ex => {
+                            // ex = JSON.parse(ex.response);
+
+                            if (ex.reason != 'missing') {
+                                $f7.store.dispatch('catchDb', ex);
+                            }
+
+                            res(true);
+                        });
+                })
+            );
+
+            //load banner
+            promises.push(
+                new Promise(res => {
+                    $f7.mod.promotion.getHomePromo()
+                        .then(rs => {
+                            if (rs.length > 0) {
+                                let obj = {
+                                    id: rs[0].doc.refId,
+                                    title: rs[0].doc.title,
+                                    titleOverride: rs[0].doc.titleOverride,
+                                    img: rs[0].doc.pic,
+                                    type: rs[0].doc.type
+                                };
+
+                                noCon = !$f7.store.state.user;
+                                banner = obj;
+
+                            } else {
+                                noCon = !$f7.store.state.user;
+                            }
+
+                            res(true);
+                        })
+                        .catch(ex => $f7.store.dispatch('catchDb', ex));
+                })
+            );
+
+            isLoaded = true;
+
+        } else if ($f7.db) {
+            //maybe get client list in v1
+            $f7.mod.partner.getAll()
+                .then(rs => {
+                    list = rs.rows;
+                    $update();
+                })
+                .catch(ex => $f7.store.dispatch('catchDb', ex));
+        }
+
+        //only show it on app start
+        if ($f7.store.state.appOpening) {
+            //show holiday
+            let holys = $f7.mod.settings.getActiveHolidays();
+
+            if (holys.length > 0) {
+                $f7.popover.create({
+                    content: `<div class="popover holiday">
+                                <div class="popover-inner">
+                                    <h2>${$f7.mod.helper.lng('hello') + ',<br/><b>' + $f7.store.state.user.doc.firstname + ' ' + $f7.store.state.user.doc.surname}</b></h2>
+                                    <p>${$f7.mod.helper.lng('holidayActive')}</p>
+                                ${holys.map((item) => `
+                                    <div class="dates">
+                                        ${new Date(item.d_start).getDate() == new Date(item.d_end).getDate() ?
+                        `<div>${$f7.mod.helper.showDateTime(item.d_start) + ' - ' + $f7.mod.helper.showDateTime(item.d_end)}</div>`
+                        :
+                        `<div>${$f7.mod.helper.showDate(item.d_start) + ' - ' + $f7.mod.helper.showDate(item.d_end)}</div>`
+                        }
+                                        <hr>
+                                        ${item.partnerName ? '<div>' + $f7.mod.helper.lng('deputy') + ': ' + item.partnerName + '</div>' : ''}
+                                    </div>
+                                `)}
+                                    <br/>
+                                    <button class="button button-fill button-raised popover-close btn-small">${$f7.mod.helper.lng('continue')}</button>
+                                </div>
+                            </div>`
+                }).open(true);
+            }
+
+            $f7.store.state.appOpening = false;
+        }
+
+        if (!treatment && !banner && !showOpening) {
+            promises.push(
+                new Promise(res => {
+                    $f7.mod.tipsTricks.getRandomEntry()
+                        .then((rs) => {
+                            tipp = rs;
+                            res(true);
+                        })
+                })
+            );
+
+            promises.push(
+                new Promise(res => {
+                    $f7.mod.tipsTricks.getCategories()
+                        .then(rs => {
+                            categories = rs;
+                            res(true);
+                        })
+                })
+            );
+        }
+
+
+        Promise.all(promises).then(() => {
+            getMine();
+        });
+    });
+
+    return $render;
+}
+</script>

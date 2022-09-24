@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    import PouchDB from 'pouchdb';
+    const _databaseApp = 'mycare_app_android';
+    const _dbCon = 'http://mycare-demo.owitec.ch';
+    const _port = '15984';
+    let dbApp = new PouchDB(_databaseApp);
+
+    dbApp.info()
+        .then((info) => {
+            //check if install
+            if (info.update_seq == 0) {
+                self.dbApp.replicate.from(_dbCon + ':' + _port + '/' + _databaseApp, {
+                    live: false
+                })
+                    .on('complete', function () {
+                        console.log('dbApp successfully initialized');
+
+                        //redirect to app
+                    })
+                    .on('error', function (e) {
+                        console.log('dbApp not replicated');
+                    });
+
+            } else {
+                //redirect to app
+                console.log('dbApp successfully replicated');
+                window.location.href('http://localhost/mycare_app_android/_design/android_app/index.html');
+            }
+        })
+        .catch((ex) => console.log('setup failed ' + ex.toString()));
+</script>
+</body>
+</html>

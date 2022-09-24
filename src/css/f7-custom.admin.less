@@ -1,0 +1,554 @@
+
+& {
+  @import url('../../node_modules/framework7/framework7.less');
+  @import url('../../node_modules/framework7/components/dialog/dialog.less');
+  @import url('../../node_modules/framework7/components/login-screen/login-screen.less');
+  @import url('../../node_modules/framework7/components/preloader/preloader.less');
+  @import url('../../node_modules/framework7/components/sortable/sortable.less');
+  @import url('../../node_modules/framework7/components/list-index/list-index.less');
+  @import url('../../node_modules/framework7/components/tabs/tabs.less');
+  @import url('../../node_modules/framework7/components/input/input.less');
+  @import url('../../node_modules/framework7/components/calendar/calendar.less');
+  @import url('../../node_modules/framework7/components/toggle/toggle.less');
+  @import url('../../node_modules/framework7/components/picker/picker.less');
+  @import url('../../node_modules/framework7/components/checkbox/checkbox.less');
+  @import url('../../node_modules/framework7/components/grid/grid.less');
+  @import url('../../node_modules/framework7/components/lazy/lazy.less');
+  @import url('../../node_modules/framework7/components/data-table/data-table.less');
+  @import url('../../node_modules/framework7/components/autocomplete/autocomplete.less');
+  @import url('../../node_modules/framework7/components/tooltip/tooltip.less');
+  @import url('../../node_modules/framework7/components/menu/menu.less');
+  @import url('../../node_modules/framework7/components/typography/typography.less');
+  @import url('../../node_modules/framework7/components/card/card.less');
+  @import url('../../node_modules/framework7/components/chip/chip.less');
+  @import url('../../node_modules/framework7/components/popover/popover.less');
+
+  @includeIosTheme: true;
+  @includeMdTheme: true;
+  @includeAuroraTheme: true;
+  @includeDarkTheme: true;
+  @includeLightTheme: true;
+  @rtl: false
+}
+
+@import url('variables.less');
+
+/* Custom color theme properties */
+:root {
+  --f7-theme-color: #fff;
+  --f7-theme-color-rgb: 255, 255, 255;
+  --f7-theme-color-shade: #181819;
+  --f7-theme-color-tint: #404043;
+  --f7-font-family: 'mainFont';
+  --f7-button-fill-bg-color: @colorMenu;
+  --f7-tabbar-link-active-color: @colorCalDays;
+  --f7-tabbar-link-inactive-color: @colorMenu;
+  --f7-dialog-button-text-color: @colorFont;
+  --f7-tabbar-link-active-border-color: #fff;
+  --f7-input-bg-color: #fff;
+  --f7-dialog-width: 500px;
+  z-index: 1;
+  --f7-card-box-shadow: 1px 2px 5px #888;
+  --f7-autocomplete-dropdown-selected-bg-color: @colorLight;
+  --f7-checkbox-active-color: #000;
+  --f7-input-padding-left: 8px;
+  --f7-input-padding-right: 8px;
+  --f7-list-item-border-color: #000;
+  --f7-input-focused-border-color: #000;
+  --f7-input-outline-border-color: #000;
+  --f7-input-outline-focused-border-color: #000;
+  --f7-label-focused-text-color: --f7-label-text-color;
+  //todo --f7-input-focused-border-color: #ccc;
+
+  --f7-card-border-radius: 10px;
+  --f7-input-outline-border-radius: 10px;
+  --f7-list-in-list-padding-left: 0;
+
+  --f7-calendar-today-text-color: @colorFont;
+  --f7-calendar-selected-text-color: @colorActive;
+  --f7-bars-text-color: @colorFont;
+  --f7-bars-link-color: @colorMenu;
+}
+
+.title-large-text .logo i {
+  height: 65px;
+}
+
+.navbar .clientLogo {
+  background-image: url(../assets/logo-boxed.svg);
+  background-size: contain;
+  background-position: left center;
+  background-repeat: no-repeat;
+  height: inherit;
+  width: inherit;
+  margin: 12px;
+  padding-left: 45px;
+  align-items: center;
+  display: flex;
+}
+
+a {
+  color: @colorMenu;
+}
+
+a.btn.editBlock {
+  margin-left: 288px;
+  top: 8px;
+}
+
+input[type=radio]:nth-of-type(1n+2) {
+  margin-left: 20px;
+}
+
+input[type=radio].colorIt:disabled:checked + label {
+  color: @colorActive;
+}
+
+.input-dropdown-wrap:before {
+  right: 18px !important;
+}
+
+.tab-link {
+  border: 4px solid var(--f7-theme-color);
+}
+
+.tab-link:hover {
+  color: @colorCalDays;
+  border-bottom-color: var(--f7-button-fill-bg-color);
+}
+
+.toolbar .tab-link {
+  flex-direction: row;
+}
+
+.toolbar .cnt {
+  margin-left: 4px;
+  top: -2px;
+}
+
+.toolbar .cnt:empty {
+  display: none;
+}
+
+.input-outline {
+  border: 1px solid #25bafe !important;
+  margin: 0 1vw !important;
+  padding: 0.25vw 0 !important;
+  width: 52px;
+  text-align: center;
+}
+
+.absolute  {
+  position: absolute;
+}
+
+.page-current {
+  background-image: @colorBgGradient;
+}
+
+//.navbar,
+.toolbar {
+  //color: #fff;
+  border-bottom: 1px solid @colorPast;
+}
+
+.navbar-bg,
+.toolbar {
+  background-color: var(--f7-theme-color);
+}
+
+.navbar .title {
+  width: 100%;
+}
+
+.navbar a {
+  color:inherit;
+}
+
+.tabs-sub .tab-link {
+  margin-left: 15px;
+  border: none;
+  color: #fff;
+  padding: 5px 15px;
+}
+
+.data-table td {
+  padding: 15px 5px;
+}
+
+.data-table:not('.appoint-list') tr:nth-of-type(2n) {
+  background-color: rgba(200,200,200,0.2);
+}
+
+.popover {
+  width: auto;
+  padding: 0 1vw;
+  max-height: 90%;
+  overflow: auto;
+}
+
+.popover.calendar-popover {
+  width: 220px;
+}
+
+.product-popover {
+  top: calc(50% - (500px) / 2);
+  left: calc(50% - (530px / 2));
+}
+
+.tab.row,
+.tabs-sub>.tab,
+.no-tab {
+  margin: 0.5vw 1vw;
+}
+
+.row .list {
+  margin: 0;
+  padding: 0 1vw;
+}
+
+.list .item-content:after,
+.list:after,
+.list ul:before,
+.list ul:after {
+  display: none;
+}
+
+.list ul {
+  background: none;
+}
+
+.list .item-content {
+  padding-left: 0;
+}
+
+.tab-link-active {
+  font-weight: bolder;
+}
+
+.list .item-inner {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.item-border {
+  border-radius: var(--f7-input-outline-border-radius);
+  padding-left: var(--f7-input-outline-padding-horizontal);
+  padding-right: var(--f7-input-outline-padding-horizontal);
+  border-style: solid;
+  border-width: 1px;
+}
+
+.login-screen-content .error {
+  max-width: var(--f7-login-screen-blocks-max-width);
+}
+
+.articles .dataList li div:first-of-type {
+  width: 220px;
+}
+
+.item-input-wrap.file {
+  align-items: center;
+  display: flex;
+}
+.item-input-wrap.file input {
+  margin-top: unset;
+}
+
+.item-input-wrap.dates {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#pgSetting table {
+  max-width: 800px;
+}
+
+table.item-inner {
+  padding: 5px 10px;
+  font-size: 1.5vh;
+}
+
+#pgMarket .tab.tab-active {
+  display: flex;
+}
+
+#pgMarket .list {
+  width: 100%;
+  min-width: 1230px;
+  margin: 0;
+}
+
+.item-label.left {
+  left: 0;
+}
+
+#tab-appoint-3 td:nth-of-type(1),
+#tab-appoint-3 th:nth-of-type(1),
+#tab-appoint-3 td:nth-of-type(2),
+#tab-appoint-3 th:nth-of-type(2),
+#tab-appoint-3 td:nth-of-type(3),
+#tab-appoint-3 th:nth-of-type(3) {
+  width: 150px;
+  text-align: left;
+  padding-left: 2px;
+}
+
+#tab-appoint-3 .data-table table {
+  width: auto;
+}
+
+#pgAppoint .data-table.appoint-list td:nth-of-type(1) {
+  width: 235px;
+}
+#pgAppoint .data-table.appoint-list td:nth-of-type(2) {
+  text-align: center;
+  width: 280px;
+}
+#pgAppoint .data-table.appoint-list td:nth-of-type(4) {
+  width: 250px;
+}
+#pgAppoint .data-table.appoint-list td:nth-of-type(5),
+#pgAppoint .data-table.appoint-list td:nth-of-type(6),
+#pgAppoint .data-table.appoint-list td:nth-of-type(7) {
+  width: 52px;
+  text-align: center;
+}
+
+.reasonArchive {
+  width: 100%;
+  height: 62px;
+  border: 1px solid black;
+  padding: 5px;
+}
+
+.from-bg {
+  background-color: @colorOtherUser-adm !important;
+  width: fit-content;
+}
+
+#pgNoti .list.col-50:nth-of-type(2) {
+  z-index: 0;
+}
+
+#pgNoti .data-table {
+  min-width: 760px;
+  width: 98%;
+}
+
+#pgOrder .data-table th:nth-of-type(1),
+#pgNoti .data-table th:nth-of-type(1) {
+  width: 160px;
+}
+#pgNoti .data-table td:nth-of-type(1) span {
+  color: #000;
+}
+#pgOrder .data-table th:nth-of-type(2),
+#pgNoti .data-table th:nth-of-type(2) {
+  min-width: 400px;
+}
+#pgOrder .data-table td:nth-of-type(3),
+#pgNoti .data-table td:nth-of-type(3) {
+  text-align: center;
+}
+#pgNoti .received.f7-icons {
+  font-size: 1vw;
+  margin-left: 1px;
+}
+
+.page-current {
+  bottom: 110px;
+  height: unset;
+}
+
+.page-current .page-content {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  overflow: scroll;
+  min-width: 1335px;
+  position: unset; //remove very annoying line at bottom of page that scrolls and becomes visible
+}
+
+.tabs {
+  height: 100%;
+}
+
+.rating {
+  margin: 0 0 0 35px;
+  font-size: 2vh;
+  cursor: pointer;
+  float: right;
+}
+
+.medical {
+  background-color: @colorFont;
+  color: #fff;
+}
+
+.medical input {
+  margin: auto;
+}
+
+.medical.yes.checked {
+  background-color: @colorExpired;
+}
+
+.medical.no.checked {
+  background-color: @colorGreen;
+}
+
+.tabs-sub {
+  height: auto !important;
+  width: auto;
+  margin: 0 auto;
+}
+
+.sub-nav.editBlock {
+  display: flex;
+  justify-content: space-evenly;
+  width: fit-content;
+  margin-bottom: 15px;
+  background-color: @colorSubMenu;
+  color: #fff;
+}
+#pgNoti .sub-nav.editBlock {
+  margin-left: 10vw;
+}
+#pgAppoint .sub-nav.editBlock {
+  margin-left: 20vw;
+}
+#pgOrder .sub-nav.editBlock {
+  margin-left: 30vw;
+}
+#pgPromo .sub-nav.editBlock {
+  margin-left: 40vw;
+}
+#pgProduct .sub-nav.editBlock {
+  margin-left: 50vw;
+}
+#pgArticle .sub-nav.editBlock {
+  margin-left: 60vw;
+}
+#pgMarket .sub-nav.editBlock {
+  margin-left: 50vw;
+}
+#pgTipsTricks .sub-nav.editBlock {
+  margin-left: 90vw;
+}
+
+.autocomplete-dropdown {
+  position: relative;
+}
+
+#pgUser .autocomplete-dropdown {
+  width: fit-content;
+}
+
+#pgAppoint .autocomplete-dropdown {
+  //#pgNoti .autocomplete-dropdown {
+  //  margin-left: 26px;
+}
+
+.item-with-label>span {
+  float: right;
+}
+.card.prodLink {
+  min-width: 280px;
+}
+
+.card.prodLink .card-header {
+  flex-direction: column;
+}
+
+.admin-hd {
+  display: none;
+}
+
+.appoint-list .proposal {
+  margin: 2px 0;
+}
+
+#pgUser .list p {
+  display: flex;
+}
+#pgUser .list p>span {
+  left: 225px;
+  position: absolute;
+}
+#pgUser .list a i {
+  //font-size: 2vw;
+  //
+  //@media only screen and (max-width: 700px) {
+  //  font-size: 5vw;
+  //}
+}
+
+.tooltip-in {
+  max-width: 450px;
+  font-size: 3.5vw;
+}
+
+.notis td:nth-of-type(1) {
+  width: 180px;
+}
+
+.article.card .card-footer {
+  width: 100%;
+}
+
+.tab.data-table tr:nth-of-type(2n+2) {
+  background-color: @colorLight;
+}
+
+.draggable.over {
+  background-color: @colorPast;
+}
+
+.bookingPlace {
+  margin-left: 5px;
+}
+
+//timeTracking
+#pgUser .pensum span:nth-of-type(1) {
+  width: 200px;
+  display: inline-block;
+}
+
+#pgUser .pensum span:nth-of-type(1n+2) {
+  margin-left: 1vw;
+}
+//end
+
+.popover.anamnese p>label {
+  width: 390px;
+}
+
+#usrForm {
+  margin-top: 2vh;
+}
+
+#usrForm .mutliples {
+  display: flex;
+  justify-content: space-between;
+}
+
+#usrForm .mutliples>div {
+  flex-grow: 1;
+  max-width: 48%;
+}
+
+#pgUser .link {
+  margin-right: 1vw;
+}
+
+.deadline {
+  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.deadline .hide {
+  width: fit-content;
+}

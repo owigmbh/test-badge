@@ -1,0 +1,137 @@
+<template>
+  <div id="app" class="app ${app.f7.device.ios ? 'ios' : ''}">
+    <!-- menu -->
+    <div class="panel panel-right panel-cover panel-init">
+      <div class="view">
+        <div class="page">
+          <div class="menu">
+              <div class="title">DentaLink
+                  <a href="#" class="link right-rel panel-close f7-icons">xmark</a>
+                  <i class="right-rel f7-icons">wifi_slash</i>
+              </div>
+          </div>
+          <div class="page-content">
+        ${!subMenu && $h`
+            <a href="/list-products/" class="item-content item-link panel-close">
+              <div class="item-inner">
+                <div class="item-title product"><i class="f7-icons">shippingbox</i><span/></div>
+              </div>
+            </a>
+            <a href="/list-orders/" class="item-content item-link panel-close">
+              <div class="item-inner">
+                <div class="item-title order"><i class="f7-icons">doc_on_doc</i><span/></div>
+              </div>
+            </a>
+            <a href="/list-payments/" class="item-content item-link panel-close">
+              <div class="item-inner">
+                <div class="item-title payment"><i class="f7-icons">creditcard</i><span/></div>
+              </div>
+            </a>
+          <a href="/search/" class="item-content item-link panel-close">
+              <div class="item-inner">
+                  <div class="item-title search"><i class="f7-icons">search</i><span/></div>
+              </div>
+          </a>
+            <a href="#" @click="${() => openSubMenu('about')}" class="item-content item-link">
+              <div class="item-inner">
+                <div class="item-title about"><i class="f7-icons">info_circle</i><span/></div>
+              </div>
+            </a>
+          <div class="bottom">
+            <a href="/noCon/" class="item-content item-link thired panel-close">
+              <div class="item-inner">
+                <div class="item-title register"><i class="f7-icons">doc_person</i><span/></div>
+              </div>
+            </a>
+            <a href="/usr-profile/" class="item-content item-link panel-close">
+              <div class="item-inner">
+                <div class="item-title profile"><i class="f7-icons">person</i><span/></div>
+              </div>
+            </a>
+              <a href="#" @click="${() => openSubMenu('aboutApp')}" class="item-content item-link">
+                  <div class="item-inner">
+                      <div class="item-title aboutApp"><i class="f7-icons">info_circle</i><span/></div>
+                  </div>
+              </a>
+          </div>`
+        }
+        ${subMenu == 'about' && $h`
+            <a href="#" @click="${() => openSubMenu()}" class="item-content item-link">
+              <div class="item-inner">
+                <div class="item-title about"><i class="f7-icons">arrow_left</i><span/></div>
+              </div>
+            </a>
+            <a href="/list-openings/1" id="lnkOpen" class="item-content item-link panel-close">
+              <div class="item-inner">
+                <div class="item-title opening"><i class="f7-icons">clock</i><span/></div>
+              </div>
+            </a>
+            <a href="http://maps.google.com" target="_blank" id="lnkMap" class="external item-content item-link panel-close">
+              <div class="item-inner">
+                <div class="item-title"><i class="f7-icons">location</i><span/></div>
+              </div>
+            </a>
+            <a href="https://www.zehmdental.ch" target="_blank" id="lnkShop" class="external item-content item-link panel-close">
+              <div class="item-inner">
+                <div class="item-title shop"><i class="f7-icons">cart</i><span/></div>
+              </div>
+            </a>
+            <a href="/list-partners/" class="item-content item-link panel-close">
+              <div class="item-inner">
+                <div class="item-title partner"><i class="f7-icons">hand_thumbsup</i><span/></div>
+              </div>
+            </a>`
+        }
+        ${subMenu == 'aboutApp' && $h`
+              <a href="#" @click="${() => openSubMenu()}" class="item-content item-link">
+                  <div class="item-inner">
+                      <div class="item-title aboutApp"><i class="f7-icons">arrow_left</i><span/></div>
+                  </div>
+              </a>
+              <a href="/list-privacy/" class="item-content item-link panel-close">
+                  <div class="item-inner">
+                      <div class="item-title privacy"><i class="f7-icons">lock</i><span/></div>
+                  </div>
+              </a>
+              <a href="/list-legal/" class="item-content item-link panel-close">
+                  <div class="item-inner">
+                      <div class="item-title legal"><div innerHTML="&#167;"></div><span/></div>
+                  </div>
+              </a>
+              <a href="/list-impressum/" class="item-content item-link panel-close">
+                  <div class="item-inner">
+                      <div class="item-title impressum"><i class="f7-icons">doc_plaintext</i><span/></div>
+                  </div>
+              </a>`
+        }
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Top Navbar -->
+    <div class="navbar head" style="display: none">
+        <a href="/" class="item-link treatment f7-icons" title="home">play</a>
+        <a href="/list-appointments/" class="item-link appointments f7-icons" title="appointments">calendar</a>
+        <a href="/list-notifications/" class="item-link notifications f7-icons" title="notifications">envelope</a>
+        <a href="/list/" class="item-link articles f7-icons" title="articles">square_stack_3d_down_right</a>
+        <a href="#" data-panel="right" class="menu item-link panel-open f7-icons">text_justify</a>
+    </div>
+
+    <!-- Your main view, should have "view-main" class -->
+    <div class="view view-main safe-areas" data-url="/"></div>
+
+  </div>
+</template>
+<script>
+  export default (props, { $f7, $update }) => {
+    let subMenu;
+
+    const openSubMenu = function (sub) {
+      subMenu = sub;
+      $update()
+          .then(() => $f7.store.dispatch('assignMenu'));
+    };
+
+    return $render;
+  }
+</script>

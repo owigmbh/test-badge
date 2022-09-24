@@ -1,0 +1,1052 @@
+<template>
+  <div class="page" data-name="home" id="pgNoCon">
+    <div class="page-content app-content">
+  ${(registration || isProfile) && $h`
+      <div class="tabs tabs-sub">
+        <div class="sub-nav editBlock">
+          <a href="#tab-reg-allAgb" class="tab-link tab-link-active">${app.f7.mod.helper.lng('allAgb')}</a>
+          <a href="#tab-reg-user" class="tab-link">${app.f7.mod.helper.lng('user')}</a>
+          <a href="#tab-reg-anam" class="tab-link">${app.f7.mod.helper.lng('anamnese')}</a>
+          <a href="#tab-reg-clientAgb" class="tab-link">${app.f7.mod.helper.lng('clAgb')}</a>
+        </div>
+        <div class="tab tab-active list" id="tab-reg-allAgb">
+          <ul></ul>
+        </div>
+        <div class="tab list" id="tab-reg-user">
+        <ul>
+        <li>
+          <div class="item-content item-input item-input-outline item-input-outline">
+            <div class="item-inner">
+              <div class="item-title item-floating-label" id="lbl-firstname">${app.f7.mod.helper.lng('firstname')}</div>
+              <div class="item-input-wrap">
+                <input type="text" name="firstname" id="firstname" tabindex="1" class="field" placeholder="${app.f7.mod.helper.lng('firstname')}" required ${isProfile && $h`disabled`}/>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-content item-input item-input-outline">
+            <div class="item-inner">
+              <div class="item-title item-floating-label" id="lbl-surname">${app.f7.mod.helper.lng('surname')}</div>
+              <div class="item-input-wrap">
+                <input type="text" name="surname" id="surname" tabindex="2" class="field" placeholder="${app.f7.mod.helper.lng('surname')}" required ${isProfile && $h`disabled`}/>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-content item-input item-input-outline">
+            <div class="item-inner">
+              <div class="item-title item-floating-label" id="lbl-street">${app.f7.mod.helper.lng('street')}</div>
+              <div class="item-input-wrap">
+                <input type="text" name="street" id="street" tabindex="3" class="field" placeholder="${app.f7.mod.helper.lng('street')}" required/>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-content item-input item-input-outline">
+            <div class="item-inner">
+              <div class="item-title item-floating-label" id="lbl-zip">${app.f7.mod.helper.lng('zip')}</div>
+              <div class="item-input-wrap">
+                <input type="text" name="zip" id="zip" tabindex="4" class="field" placeholder="${app.f7.mod.helper.lng('zip')}" required/>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-content item-input item-input-outline">
+            <div class="item-inner">
+              <div class="item-title item-floating-label" id="lbl-city">${app.f7.mod.helper.lng('city')}</div>
+              <div class="item-input-wrap">
+                <input type="text" name="city" id="city" tabindex="5" class="field" placeholder="${app.f7.mod.helper.lng('city')}" required/>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-content item-input item-input-outline">
+            <div class="item-inner">
+              <div class="item-title item-floating-label" id="lbl-country">${app.f7.mod.helper.lng('country')}</div>
+              <div class="item-input-wrap">
+                <input type="text" id="country" name="country" tabindex="6" class="search display-inline-block field" style="width:90%" placeholder="${$f7.mod.helper.lng('searchCountry')}"/> <a href="#" title="Schweiz" @click="${() => { $f7.$('#country').val('Switzerland');$f7.$('#email').focus()}}"> 🇨🇭</a>
+                <div id="dropCountry" class="autocomplete-dropdown"></div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-content item-input item-input-outline">
+            <div class="item-inner">
+              <div class="item-title item-floating-label" id="lbl-email">${app.f7.mod.helper.lng('email')}</div>
+              <div class="item-input-wrap">
+                <input type="email" name="email" id="email" tabindex="9" class="field" placeholder="${app.f7.mod.helper.lng('email')}" ${!app.f7.mod.user.isServicedesk() && $h`required`}/>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-content item-input item-input-outline">
+            <div class="item-inner">
+              <div class="item-title item-floating-label" id="lbl-phone">${app.f7.mod.helper.lng('phone')}</div>
+              <div class="item-input-wrap">
+                <input type="tel" name="phone" id="phone" tabindex="10" class="field" placeholder="${app.f7.mod.helper.lng('telNr')}"/>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-content item-input item-input-outline">
+            <div class="item-inner">
+              <div class="item-title item-floating-label" id="lbl-gender">${app.f7.mod.helper.lng('gender')}</div>
+              <div class="item-input-wrap input-dropdown-wrap">
+                <select name="gender" id="gender" tabindex="11" class="field" required ${isProfile && $h`disabled`}>
+                  <option value=""></option>
+                  <option value="m">${app.f7.mod.helper.lng('male')}</option>
+                  <option value="f">${app.f7.mod.helper.lng('female')}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="lastStatic">
+          <div class="item-content item-input item-input-outline">
+            <div class="item-inner">
+              <div class="item-title item-floating-label">${app.f7.mod.helper.lng('birthday')}</div>
+              <div class="item-input-wrap">
+                <input type="text" name="birthday" id="birthday" tabindex="12" @change="${(e) => updateBirthday(e)}" class="field" placeholder="${app.f7.mod.helper.lng('birthday')}" required ${isProfile && $h`disabled`}/>
+                <i class="f7-icons" id="btn-birthday">calendar</i>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+        </div>
+        <div class="tab list" id="tab-reg-anam">
+          <ul></ul>
+        </div>
+        <div class="tab list" id="tab-reg-clientAgb">
+          <ul></ul>
+        </div>
+        <div class="btn-anamnese">
+          <button @click="${() => back()}" accesskey="r" tabindex="55" class="button button-raised button-fill">${app.f7.mod.helper.lng('back')}</button>
+          <button @click="${() => next()}" accesskey="s" tabindex="54" class="btn-submit button button-raised button-fill">${app.f7.mod.helper.lng('next')}</button>
+        </div>
+      </div>
+    `}
+
+    ${(!registration && !isProfile)  && $h`
+      <div class="error"></div>
+      ${!app.f7.store.state.user || app.f7.store.state.user.noCon ? $h`
+        <div class="scan">
+          <button @click="${() => scanQr()}" class="button button-raised button-fill">${app.f7.mod.helper.lng('qrScan')}</button>
+        </div>
+      ` : ''}
+
+      ${app.f7.store.state.user && !app.f7.store.state.user.noCon && app.f7.mod.user.isServicedesk() ? $h
+        `<div class="scan flex-direction-column">
+          ${msg ? $h`
+            <p class="info" innerHTML="${msg}"></p>
+      ` : ''}
+      </div>
+      <div class="scan">
+        ${cookie && app.f7.store.state.user && !app.f7.store.state.user.noCon && app.f7.mod.user.isServicedesk() &&
+          $h `<span><b>${doc && doc.firstname + ' ' + doc.surname}</b></span><br/>
+            <button @click="${() => register(app.f7.store.state.clientId, app.f7.store.state.settings.title)}" class="button button-raised button-fill">${app.f7.mod.helper.lng(app.f7.mod.user.isServicedesk() ? 'edit' : 'register')}</button>`
+        }
+        <br/><br/>
+        <a href="#" @click="${() => reset()}" class="button button-raised button-fill">${app.f7.mod.helper.lng('new')}</a>
+      </div>
+      <div class="scan flex-direction-row margin-top">
+        <span>${app.f7.mod.helper.lng('lang')}:</span>
+        <span class="link" @click="${() => changeLang('de')}">de</span>
+        <span class="link" @click="${() => changeLang('en')}">en</span>
+      </div>`
+
+      : $h`
+        ${app.f7.store.state.user && !app.f7.store.state.user.noCon ? $h`
+          <div class="scan">
+            <button @click="${() => reload()}" class="button button-raised button-fill">${app.f7.mod.helper.lng('reload')}</button><br/>
+            <button @click="${() => app.f7.store.dispatch('logout')}" class="button button-raised button-fill">${app.f7.mod.helper.lng('logout')}</button>
+          </div>
+        ` : ''}
+        <div class="scan flex-direction-column">
+        ${msg ? $h`
+          <p class="info" innerHTML="${msg}"></p>
+        ` : ''}
+        </div>
+
+        <h2>${app.f7.mod.helper.lng('clients')}</h2>
+        ${list ? $h`
+          ${list.map((item) => $h`
+            <div class="card client">
+              <div class="card-content" id="c${item.doc.clientId}">
+                ${item.doc._attachments && item.doc._attachments['logo.png'] ? $h`<img src="data:${item.doc._attachments['logo.png'].content_type + ';base64, ' + item.doc._attachments['logo.png'].data}" title="logo"/>` : $h`<i class="f7-icons float-left align-self-center text-align-center">photo</i>`}
+                <div class="full-width">
+                  <h3>${item.doc.title}</h3>
+                  <span>${item.doc.city}, ${item.doc.offering}</span>
+                  <div style="margin-top: 4px;">
+                    <a href="${app.f7.mod.helper.getMaps()}${item.doc.street},${item.doc.zip} ${item.doc.city}" target="_blank" id="lnkMap" class="external f7-icons">map_pin_ellipse</a>
+                    <i @click="${() => register(item.doc.clientId, item.doc.title)}" class="f7-icons link right-rel justify-content-flex-end" title="${app.f7.mod.helper.lng('register')}">person_badge_plus</i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `)}
+        ` : ''}
+        ${!list ? $h`
+            <p>${app.f7.mod.helper.lng('noEntries')}</p>
+        ` : ''}`
+      }
+    `}
+    </div>
+  </div>
+</template>
+<script>
+    import { BarcodeScanner, SupportedFormat } from '@capacitor-community/barcode-scanner';
+    import country from "countries-list";
+
+export default (props, { $f7, $on, $update }) => {
+    let noCon = true;
+    let cId = null;
+    let cName = null; //'Zehm Dental Suisse',
+    let registration, msg, list, isProfile, doc, isDirty, dynFields, cookie, calBirth, countries;
+    let storage = window.localStorage;
+
+    const showRegStatus = function () {
+        //later: mark clients as subscribed or anamnese is pending if dbClient exists
+        list.forEach(obj => {
+            let anam = storage.getItem('anamnese:' + obj.doc.clientId);
+
+            if (anam) {
+                $f7.$($f7.$('#c' + obj.doc.clientId + ' span')[1]).append('<br/><span class="info">' + $f7.mod.helper.lng('pending') + '</span>');
+//                    $f7.$('#' + obj.doc.clientId).remove();
+            }
+        });
+
+        //mark active client
+        let obj = $f7.$($f7.$('#c' + $f7.store.state.clientId + ' span')[1]);
+
+        if(obj.find('span').length > 0) {
+            obj.find('span').html($f7.mod.helper.lng('active'));
+
+        } else {
+            obj.append('<br/><span class="info">' + $f7.mod.helper.lng('active') + '</span>');
+        }
+    };
+
+
+
+        const intLink = function (e) {
+            $f7.store.dispatch('intLink', e)
+        };
+
+    const didUserGrantPermission = async () => {
+        // check if user already granted permission
+        const status = await BarcodeScanner.checkPermission({ force: false });
+
+        if (status.granted) {
+            // user granted permission
+            return true;
+        }
+
+        if (status.denied) {
+            // user denied permission
+            return false;
+        }
+
+        if (status.asked) {
+            // system requested the user for permission during this call
+            // only possible when force set to true
+        }
+
+        if (status.neverAsked) {
+            // user has not been requested this permission before
+            // it is advised to show the user some sort of prompt
+            // this way you will not waste your only chance to ask for the permission
+            const c = confirm($f7.mod.helper.lng('permReq.askQr'));
+            if (!c) {
+                return false;
+            }
+        }
+
+        if (status.restricted || status.unknown) {
+            // ios only
+            // probably means the permission has been denied
+            return false;
+        }
+
+        // user has not denied permission
+        // but the user also has not yet granted the permission
+        // so request it
+        const statusRequest = await BarcodeScanner.checkPermission({ force: true });
+
+        if (statusRequest.asked) {
+            // system requested the user for permission during this call
+            // only possible when force set to true
+        }
+
+        if (statusRequest.granted) {
+            // the user did grant the permission now
+            return true;
+        }
+
+        // user did not grant the permission, so he must have declined the request
+        return false;
+    };
+
+    const checkPermission = async () => {
+        const status = await BarcodeScanner.checkPermission();
+
+        if (status.denied) {
+            // the user denied permission for good
+            // redirect user to app settings if they want to grant it anyway
+            const c = confirm($f7.mod.helper.lng('permReq.actInSettings'));
+            if (c) {
+                BarcodeScanner.openAppSettings();
+            }
+        }
+    };
+
+    const scanQr = async function () {
+        if(! await didUserGrantPermission()) {
+            checkPermission();
+        }
+
+        BarcodeScanner.prepare(); //boost performance
+
+        BarcodeScanner.hideBackground(); // make background of WebView transparent
+        $f7.$('html').hide();
+
+        const result = await BarcodeScanner.startScan({ targetedFormats: [SupportedFormat.QR_CODE] }); // start scanning and wait for a result
+
+        // if the result has content
+        if (result.hasContent) {
+            if (result.format == 'QR_CODE') {
+                $f7.store.dispatch('saveQr', result.content);
+
+                //remove anamnese cookie
+                let tmp = JSON.parse(result.content);
+                storage.removeItem('anamnese:' + tmp.cId);
+
+            } else {
+                $f7.dialog.alert($f7.mod.helper.lng('notQr'));
+            }
+        }
+
+        BarcodeScanner.showBackground();
+        $f7.$('html').show();
+    };
+
+
+
+    const profile = function () {
+        registration = false;
+        isProfile = true;
+        doc = $f7.store.state.user.doc;
+
+        $update()
+            .then(() => {
+                //hide agb tabs
+                $f7.$('.sub-nav .tab-link:first-of-type, .sub-nav .tab-link:last-of-type').hide();
+                $f7.tab.show('#tab-reg-user');
+                $f7.$('.navbar .title').html($f7.mod.helper.lng('profile'));
+
+                setTimeout(renderProfile,500);
+            });
+    };
+
+    const changeLang = function (iso) {
+        if(iso) {
+            $f7.store.state.iso = iso;
+
+            $f7.store.dispatch('loadLng', iso)
+                .then((doc) => {
+                    $f7.mod.helper.lngStr = doc;
+
+                    $update();
+                });
+        }
+    };
+
+    const reload = function () {
+      $f7.preloader.show();
+      $f7.store.dispatch('replicate', true);
+    };
+
+    function openDrop(obj) {
+        let event = document.createEvent('MouseEvents');
+        event.initMouseEvent('mousedown', true, true, window);
+        obj.dispatchEvent(event);
+    }
+
+    const renderProfile = function () {
+        const posAllAgb = $f7.$('#tab-reg-allAgb ul');
+        const posClientAgb = $f7.$('#tab-reg-clientAgb ul');
+        const posUser = $f7.$('#tab-reg-user .lastStatic');
+        const posAnam = $f7.$('#tab-reg-anam ul');
+
+        const tpl = '<li><div class="item-content item-input item-input-outline"><div class="item-inner"><div class="item-title item-floating-label" $label$></div><div class="item-input-wrap">$field$</div></div></div></li>';
+        const tplAgb = '<li><div class="item-content item-input item-input-outline"><div class="item-inner"><div class="item-input-wrap">$field$</div></div></div></li>';
+        const tplCheckbox = '<li><div class="item-content item-input item-input-outline"><div class="item-inner"><div class="item-title item-label"></div><div class="item-input-wrap">$label$ $field$</div></div></div></li>';
+        const inp = '<input class="field" tabindex="';
+
+        //todo what if no internet?
+
+        $f7.mod.user.getFields(cId ? cId : $f7.store.state.clientId)
+            .then(rs => {
+                //if not found?
+                if (!rs.fields) {
+                    $f7.dialog.alert('notFound');
+                    return false;
+                }
+
+                dynFields = rs.fields;
+
+                let i = 20;
+
+                dynFields.map((f) => {
+                    let tmp = '';
+
+                    switch (f.type) {
+                        case 'radio':
+                        case 'radioValue':
+
+                            if (f.id == 'frequency') {
+                                tmp += '<br/><span>';
+
+                            } else {
+                                tmp += '<span class="' + (f.pos == 'anam' ? 'answer' : '' ) + '">';
+                            }
+
+                            //add text field
+                            tmp += '<span class="medAnswer">' + (f.answer ? '<input class="hide width-100" placeholder="' + f.answer + '" name="ans_' + f.id + '" id="ans_' + f.id + '"/>' : '') + '</span>';
+
+                            f.values.forEach(v => {
+                                let checked = doc[f.id] == v.key || (doc['fields'] && doc['fields'][f.id]) == v.key ? ' checked' : '';
+
+                                //wrap med radio-btns
+                                if (f.id.startsWith('med')) {
+                                    tmp += '<span class="medical ' + v.key + checked + '">';
+                                }
+
+                                tmp += '<label for="' + f.id + '-' + v.key + '"' + '>';
+
+                                if(f.type == 'radioValue') {
+                                    tmp += inp.replace(/field/, 'field radioValue');
+
+                                } else {
+                                    tmp += inp;
+                                }
+
+                                tmp += i + '" type="radio" name="' + f.id + '" id="' + f.id + '-' + v.key + '" value="' + v.key + '"' + checked;
+
+                                if (!f.optional) {
+                                    tmp += ' required';
+                                }
+
+                                tmp += '/>' + v.value;
+
+                                if(v.input) {
+                                    tmp += '<input type="text" name="' + v.input + '" tabindex="' + (++i) + '" value="" class="field hide-force width-100 radioValue" placeholder="' + v.value + '" />';
+                                }
+
+                                tmp += '</label>';
+
+                                //wrap med radio-btns
+                                if (f.id.startsWith('med')) {
+                                    tmp += '</span>';
+
+                                } else if (f.id === 'frequency') {
+                                    tmp += '<br/>';
+                                }
+
+                                i++;
+                            });
+
+                            tmp += '</span>';
+
+                            tmp = tplCheckbox.replace(/\$label\$/, '<span class="label" id="lbl-' + f.id + '">' + f.title + '</span>')
+                                .replace(/\$field\$/, tmp);
+
+                            break;
+
+                        case 'agb':
+                            f.points.forEach(p => {
+                                tmp += '<p>' + p + '</p>';
+                            });
+
+
+                            tmp = tplAgb.replace(/\$field\$/, tmp);
+
+                            break;
+
+                        default:
+                            tmp = inp + i + '" type="text" name="' + f.id + '" id="' + f.id + '" value="';
+
+                            if (doc[f.id]) {
+                                tmp += doc[f.id];
+
+                            } else if (doc['fields'] && doc['fields'][f.id]) {
+                                tmp += doc['fields'][f.id];
+                            }
+
+                            tmp += '" ' + (!f.optional ? ' required' : '') + '/>';
+
+
+                            tmp = tpl.replace(/\$label\$>/, ' id="lbl-' + f.id + '">' + f.title)
+                                .replace(/\$field\$/, tmp);
+                    }
+
+                    switch (f.pos) {
+                        case 'allAgb':
+                            posAllAgb.append(tmp);
+                            break;
+
+                        case 'anam':
+                            //for css horizontal line
+                            posAnam.append(tmp.replace(/<li>/, '<li class="med">'));
+                            break;
+
+                        case 'clientAgb':
+                            posClientAgb.append(tmp);
+                            break;
+
+                        default:
+                            posUser.append(tmp);
+                    }
+
+                    $f7.input.checkEmptyState('input[name=' + f.id + ']');
+
+                    i++;
+                });
+
+                //click radio
+                $f7.$('#tab-reg-user .field').keyup((e) => {
+                    if (e.key === "Enter") {
+                        let tmp = $f7.$(e.currentTarget).parent().parent().parent().parent().next();
+
+                        if(tmp.length > 0) {
+                            let tmp2 = tmp.find('.field');
+                            if(tmp2.length > 0) {
+                                if(tmp2[0].type == 'select-one') {
+                                    openDrop(tmp2[0]);
+
+                                } else {
+                                    tmp2[0].focus();
+                                }
+                            }
+                        } else {
+                            next();
+                        }
+                    }
+                });
+
+                //add agb checkboxes
+                let allAgb = '<div class="display-flex flex-direction-row">' +
+                    '<input type="checkbox" class="confirmAgbs field" name="allAgb" id="allAgb" value="' + new Date().toISOString() + '"' + (doc.allAgb ? ' checked="ckecked"' : '') + '/>' +
+                    '<label class="action text-align-left" for="allAgb">' + $f7.mod.helper.lng('confirmAllAgb') + '</label>' +
+                    '</div>';
+
+                posAllAgb.append(allAgb);
+
+                let clAgb = '<div class="display-flex flex-direction-row">' +
+                    '<input type="checkbox" class="confirmAgbs field" name="clAgb" id="clAgb" value="' + new Date().toISOString() + '"' + (doc.clAgb ? ' checked="ckecked"' : '') + '/>' +
+                    '<label class="action text-align-left" for="clAgb">' + $f7.mod.helper.lng('confirmClientAgb').replace('$client$', cName) + '</label>' +
+                    '</div>';
+
+                posClientAgb.append(clAgb);
+
+                //set input values
+                for (let x in doc) {
+                    let obj = $f7.$('.page-current input[name=' + x + '], select[name=' + x + ']');
+
+                    if (obj && obj.length == 0) continue;
+
+                    if (obj[0].type == 'radio') {
+                        $f7.$('.page-current input[name="' + x + '"][value="' + doc[x] + '"]').prop('checked', true);
+
+                        //show answer input if yes
+                        if (doc[x + '_answer']) {
+                            let tmp = $f7.$('input[name="ans_' + x + '"]');
+                            tmp.val(doc[x + '_answer']);
+                            tmp.show();
+                        }
+
+                    } else if(x != 'birthday') {
+                        obj.val(doc[x]);
+
+                    } else if(x == 'birthday') {
+                        if(doc[x] && doc[x] != ' ') {
+                            let d = new Date(doc[x]);
+                            obj.val(d.getDate() + '.' + (d.getMonth() + 1) + '.' + d.getFullYear());
+                        }
+                    }
+
+                    $f7.input.checkEmptyState('input[name=' + x + ']');
+                    $f7.input.checkEmptyState('select[name=' + x + ']');
+
+                    //block basic inputs if prefilled in anamnese
+                    switch (x) {
+                        case 'firstname':
+                        case 'surname':
+//                                case 'street':
+//                                case 'zip':
+//                                case 'city':
+//                                case 'country':
+                        case 'birthday':
+                        case 'gender':
+//                                case 'email':
+//                                case 'phone':
+                            if (!registration) {
+                                obj.prop('disabled', true);
+                            }
+
+                            break;
+                    }
+                }
+
+                //if prefilled from user scroll down
+                if (doc['gender']) {
+                    $f7.$('.page-content').scrollTo(0, $f7.mod.helper.getOffset('input[name="gender"]').top - 200, 200);
+                }
+
+                let now = new Date();
+                let today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                let weekLater = new Date().setDate(today.getDate() + 7);
+
+                if(!isProfile) {
+                    let bDate;
+
+                    if(doc.birthday) {
+                        bDate = doc.birthday.substr(0, 5);
+                        bDate += doc.birthday.substr(5, 2);
+                        bDate += doc.birthday.substr(7);
+                    }
+
+                    calBirth = $f7.calendar.create({
+                        inputEl: '#btn-birthday',
+                        openIn: 'customModal',
+                        header: false,
+                        footer: true,
+                        value: bDate ? [bDate] : null,
+                        disabled: {
+                            from: new Date()
+                        },
+                        events: [
+                            {
+                                from: today,
+                                to: weekLater
+                            },
+                            //- more events this day
+                            {
+                                date: today,
+                                color: '#ff0000'
+                            }
+                        ],
+                        on: {
+                            change: (e, v) => {
+                                if(!bDate) {
+                                    e.$inputEl.prev().val(v[0].getDate() + '.' + (v[0].getMonth() + 1) + '.' + v[0].getFullYear());
+                                    e.close();
+                                    e.$inputEl.parent().parent().parent().next().find('input').focus();
+                                }
+                            },
+//                            open(e){
+//                            let y = new Date().getFullYear() - 25;
+//                            cal.setYearMonth(y, 5, 0);
+//                            cal.addValue();
+//                            console.log(doc.birthday);
+//                            cal.update();
+//                        }
+                        }
+                    });
+
+                    bDate = null;
+                }
+
+                $f7.autocomplete.create({
+                    inputEl: '.page-current #country',
+                    openIn: 'dropdown',
+                    dropdownContainerEl: '#dropCountry',
+                    preloader: false, //enable preloader
+                  /* If we set valueProperty to "id" then input value on select will be set according to this property */
+                    valueProperty: 'name', //object's "value" property name
+                    textProperty: 'flag', //object's "text" property name
+                    limit: 20, //limit to 20 results
+                    typeahead: false,
+                    highlightMatches: true,
+                    dropdownPlaceholderText: $f7.mod.helper.lng('searchCountry'),
+                    source: $f7.mod.helper.debounce(function (query, render) {
+                        let results = [];
+
+                        //if input empty or smaller then 3 & wait 500ms to search
+                        if (query.length == 0) {
+                            render([{flag: 'search', name: $f7.mod.helper.lng('searchCountry')}]);
+                            return;
+
+                        } else if (query.length < 3) {
+                            //maybe error sometimes in mitarbeiter, maybe because autocomplete not there???
+                            render([{flag: '', name: $f7.mod.helper.lng('min3Chars')}]);
+                            return;
+                        }
+
+                        // search
+                        countries.forEach((c) => {
+                            if(c.name.toLowerCase().indexOf(query.toLowerCase()) != -1) {
+                                results.push(c);
+                            }
+                        });
+
+                        // Render items by passing array with result items
+                        render(results);
+
+                    }, 500),
+                    on: {
+                        change: function (value) {
+//                            $f7.$('#canvas').empty(); //clear qr
+//
+//                            if (value[0].type == 'ext') {
+//                                edit(value[0], true);
+//
+//                            } else {
+//                                edit(value[0]._id);
+//                            }
+//
+                            this.$inputEl.val(value[0].name);
+                            this.$inputEl.parent().parent().parent().parent().next().find('input').focus();
+                        }
+                    },
+                    renderItem: function (item, index) {
+                        let itemHtml;
+                        let v = item.value;
+
+                        // Dropdown
+                        itemHtml = `<li>
+                        <label data-value="${v}">
+                          <div class="item-inner country">
+                            <span class="flag">${(item.text ? item.text : '')}</span>
+                            <span class="name">${v}</span>
+                        </div></label></li>`;
+
+                        return itemHtml.trim();
+                    }
+                });
+
+                //click radio
+//                posAnam.find('.medical').click((e) => {
+////                    e.currentTarget.children[0].click();
+//                    tmp.parent().find('.checked').removeClass('checked');
+//                    tmp.addClass('checked');
+//
+//                });
+
+                //scroll on medical click
+                posUser.find('input[type="radio"].radioValue').change((e) => {
+                    let obj = $f7.$(e.currentTarget);
+
+                    //hide all
+                    $f7.$('input[type="text"].radioValue').addClass('hide-force');
+
+                    //show input
+                    if(obj.hasClass('radioValue') && obj[0].checked) {
+                        obj.next().removeClass('hide-force');
+                        obj.next().focus();
+                    }
+                });
+
+                //scroll on medical click
+                posAnam.find('input[type="radio"]').change((e) => {
+                    let obj = $f7.$(e.currentTarget);
+                    let parent = $f7.$(e.currentTarget).parent().parent().parent().parent().parent().parent().parent();
+
+                    if(obj[0].id.startsWith('med')) {
+                        let inp = obj.parent().parent().parent().find('.hide');
+
+                        //show input
+                        if(inp.length > 0) {
+                            if (obj[0].id.endsWith('yes')) {
+                                inp.show();
+                                inp.focus();
+                                return;
+
+                            } else {
+                                inp.hide();
+                            }
+                        }
+                    }
+
+                    $f7.$('.page-content').find('.item-inner-active').removeClass('item-inner-active');
+                    parent.next().find('.item-inner').addClass('item-inner-active');
+
+                    //scroll
+                    let p = $f7.$('.page-content');
+                    p.scrollTo(0, p.height() + p.scrollTo() + 45, 100);
+//                    $f7.$('.page-content').scrollTo(0, $f7.mod.helper.getOffset(e.target).top - 200, 200);
+                });
+
+//                    $f7.$('.field').change(function () {
+//                        isDirty = true;
+//                        $f7.store.dispatch('markDirty', isDirty);
+//                    });
+
+                //if registered user registers with a new client
+                if ($f7.store.state.user && !registration && $f7.view.current.router.currentRoute.params.action != 'edit' && !$f7.mod.user.isServicedesk()) {
+                    next();
+                }
+            })
+            .catch(ex => $f7.store.dispatch('catchDb', ex));
+    };
+
+    const updateBirthday = function (e) {
+        let tmp = e.currentTarget.value.split('.');
+        let d = new Date(tmp[2], tmp[1], tmp[0]);
+        doc.birthday = d.toISOString();
+
+        //month minus one because cal month starts with 0
+        tmp = doc.birthday.substr(0, 5);
+        tmp += ('0' + (doc.birthday.substr(5, 2) - 1)).substr(-2);
+        tmp += doc.birthday.substr(7);
+        calBirth.setValue([tmp]);
+    };
+
+    const next = function () {
+        //check if all fields are filled
+        //output error
+        //goto next
+        //if last save
+        let c = $f7.$('#pgNoCon .tab-active')[0].id;
+
+        //remove all so no old entries are shown
+        $f7.$('#' + c).find('.item-title').removeClass('mandatory');
+
+        switch (c) {
+            case 'tab-reg-allAgb':
+                let v = $f7.$('#allAgb')[0];
+
+                if (v.checked) {
+                    $f7.tab.show('#tab-reg-user');
+                    v.nextSibling.classList.remove('mandatory');
+
+                } else {
+                    let d = $f7.dialog.alert($f7.mod.helper.lng('confirmAgb'));
+
+                    d.on('close', () => {
+                        v.nextSibling.classList.add('mandatory');
+                    });
+                }
+
+                break;
+
+            case 'tab-reg-user':
+            case 'tab-reg-anam':
+
+                let missing = {};
+                let inputValues = $f7.$('#' + c + ' .field');
+
+                for (let i = 0, len = inputValues.length; i < len; i++) {
+                    let item = inputValues[i];
+
+                    if (item.required) {
+                        let tmp = dynFields.find(obj => obj.id == item.name);
+
+                        if (item.type == 'radio' && c == 'tab-reg-user') {
+                            if (item.checked) {
+                                missing[item.name] = '';
+
+                            } else {
+                                //set radio status if not checked before as to not overwrite previous
+                                missing[item.name] = typeof missing[item.name] == "undefined" ? (tmp ? tmp.title : $f7.mod.helper.lng(item.name)) : missing[item.name];
+                            }
+                        } else if (item.value == '') {
+                          missing[item.name] = tmp ? tmp.title : $f7.mod.helper.lng(item.name);
+                        }
+
+                    } else {
+                      missing[item.name] = '';
+                    }
+                }
+
+                //clear checked radios
+                let res = [];
+                let first;
+
+                for (let i in missing) {
+                    if (missing[i] != '') {
+                      if(!first) first = i;
+
+                        res.push(missing[i]);
+                        $f7.$('#lbl-' + i).addClass('mandatory');
+
+                    } else {
+                        $f7.$('#lbl-' + i).removeClass('mandatory');
+                    }
+                }
+
+                if (res.length > 0) {
+                    if (res.length > 5) {
+                        res.splice(6);
+                        res.push('...');
+                    }
+
+                    let d = $f7.dialog.alert($f7.mod.helper.lng('errValid.missing') + ':<br/>' + res.join('<br/>'));
+
+                    d.on('close', () => {
+                        //focus on first error
+                        let obj = $f7.$('input[name="' + first + '"]');
+
+                        //focus on element
+                        obj.focus();
+                    });
+
+                } else {
+                    if (isProfile) {
+                        if (c == 'tab-reg-user') {
+                            $f7.tab.show('#tab-reg-anam');
+
+                        } else {
+                            save();
+                        }
+
+                    } else {
+                        $f7.tab.show(c == 'tab-reg-user' ? '#tab-reg-anam' : '#tab-reg-clientAgb');
+                    }
+                }
+
+                break;
+
+            case 'tab-reg-clientAgb':
+                let v2 = $f7.$('#clAgb')[0];
+
+                if (v2.checked) {
+                    save();
+
+                } else {
+                    let d = $f7.dialog.alert($f7.mod.helper.lng('confirmAgb'));
+
+                    d.on('close', () => {
+                        //focus on first error
+                        v2.nextSibling.classList.add('mandatory');
+                    });
+                }
+
+                break;
+        }
+
+        //set focus to 1. field
+        $f7.$($f7.$('#pgNoCon .tab-active .field')[0]).focus();
+    };
+
+    const back = function () {
+        let c = $f7.$('#pgNoCon .tab-active')[0].id;
+        let dest;
+
+        switch (c) {
+            case 'tab-reg-clientAgb':
+                dest = '#tab-reg-anam';
+                break;
+
+            case 'tab-reg-anam':
+                dest = '#tab-reg-user';
+                break;
+
+            case 'tab-reg-user':
+                if (isProfile) {
+                    $f7.views.main.router.navigate('/usr-profile/');
+
+                } else {
+                    dest = '#tab-reg-allAgb';
+                }
+
+                break;
+
+            default:
+                cancel();
+                return;
+        }
+
+        $f7.tab.show(dest);
+    };
+
+    const reset = function () {
+        if(cookie) {
+            //ask if sure
+            $f7.dialog.create({
+                title: $f7.mod.helper.lng('anamnese'),
+                text: $f7.mod.helper.lng('askNew'),
+                buttons: [
+                    {
+                        text: $f7.mod.helper.lng('no'),
+                        cssClass: 'button button-raised button-fill'
+                    },
+                    {
+                        text: $f7.mod.helper.lng('yes'),
+                        cssClass: 'button button-raised button-fill'
+                    }
+                ],
+                onClick: (dialog, index) => {
+                    if (index === 0) {
+                        //close dialog
+                        dialog.close();
+                        //do nothing, let edit continue
+                        return true;
+
+                    } else if (index === 1) {
+                        dialog.close();
+                        storage.removeItem('anamnese:' + $f7.store.state.clientId);
+                        doc = null;
+                        cancel();
+                        register($f7.store.state.clientId, $f7.store.state.settings.title);
+                    }
+                },
+                verticalButtons: false
+            }).open();
+
+        } else {
+            register($f7.store.state.clientId, $f7.store.state.settings.title);
+        }
+    };
+
+    const cancel = function (e) {
+        isDirty = false;
+//            $f7.store.dispatch('markDirty', isDirty);
+
+        msg = typeof e == 'string' ? e : null;
+        registration = null;
+//        doc = null;
+
+        $update();
+    };
+
+
+    $on('pageInit', () => {
+        let m = $f7.$('.navbar a');
+        m.removeClass('active');
+        $f7.$(m[4]).addClass('active');
+        let m2 = $f7.$('.panel-right a .item-title');
+        m2.removeClass('active');
+        $f7.$('.panel-right .item-link .register').addClass('active');
+
+        if (!$f7.store.state.user || $f7.store.state.user.noCon == true) {
+            noCon = true;
+
+        } else {
+            noCon = false;
+        }
+
+
+
+        const countryCodes = Object.keys(country.countries);
+        countries = countryCodes.map(code => {
+            return {
+                name: country.countries[code].name,
+                flag: country.countries[code].emoji
+            }
+        });
+
+
+    });
+
+    return $render;
+}
+</script>

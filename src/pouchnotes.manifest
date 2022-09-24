@@ -1,0 +1,19 @@
+CACHE MANIFEST
+# Version 2020.12.15.01
+
+CACHE:
+index.html
+app.js
+0.app.js
+1.app.js
+2.app.js
+3.app.js
+4.app.js
+fonts/Framework7Icons-Regular.eot
+fonts/Framework7Icons-Regular.ttf
+fonts/Framework7Icons-Regular.woff
+fonts/Framework7Icons-Regular.woff2
+fonts/MaterialIcons-Regular.eot
+fonts/MaterialIcons-Regular.ttf
+fonts/MaterialIcons-Regular.woff
+fonts/MaterialIcons-Regular.woff2

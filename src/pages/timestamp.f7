@@ -1,0 +1,344 @@
+<template>
+    <div class="page" data-name="timestamp" id="pgTime">
+        <div class="page-content">
+            <span>
+        ${newStamp ? $h
+            `<div class="stamp-btns">
+                <button class="green big" @click="${() => stamp()}">${$f7.mod.helper.lng('come')}</button>
+                <button class="red" @click="${() => stamp('go')}">${$f7.mod.helper.lng('go')}</button>
+            </div>`
+        : ''}
+
+        ${doc ? $h
+            `<div class="timeBox edit">
+                <div class="dateBox">
+                    <div class="day">${doc.s.day}</div>
+                    <div class="date">
+                        <a href="#" class="previous f7-icons" @click="${() => previous()}" title="${$f7.mod.helper.lng('previous')}">arrowtriangle_left_fill</a>
+                        <span>${doc.s.date}</span>
+                        <a href="#" class="next f7-icons" @click="${() => next()}" title="${$f7.mod.helper.lng('next')}">arrowtriangle_right_fill</a>
+                    </div>
+                    <div class="month">${doc.s.month}</div>
+                </div>
+                <div class="distanceBox"></div>
+                <div class="content">
+                    <div class="title">${$f7.mod.helper.lng('stamp')}</div>
+                    <div class="entries">
+                        <span id="startPicker"><input id="startPickerTime" type="hidden"/></span>
+                        <span id="endPicker"><input id="endPickerTime" type="hidden"/></span>
+                        <a href="#" @click="${() => stampEdit()}" class="f7-icons" title="${$f7.mod.helper.lng('save')}">checkmark</a>
+                    </div>
+                </div>
+            </div>`
+        : ''}
+            </span>
+            <div class="cards-list display-flex"></div>
+        </div>
+    </div>
+</template>
+<script>
+export default (props, { $f7, $on, $update }) => {
+    let list, doc, _i, oldDate, month, newStamp, pickerStart, pickerEnd;
+
+    const getMonth = function (m) {
+        if (!m && !month) {
+            let d = new Date();
+            month = d.getFullYear().toString() + ('0' + d.getMonth()).substr(-2);
+
+        } else if (m) {
+            month = m
+        }
+
+        $f7.mod.timestamp.get($f7.store.state.user.uId + ':' + month)
+            .then(rs => {
+                list = rs;
+
+                //if any open stamp
+                let last = list.stamps[0];
+
+                if (!last || last.end) {
+                    newStamp = true;
+                }
+
+                $update()
+                    .then(() => {
+                        $f7.$('.cards-list').empty();
+
+                        renderAll();
+
+                        $f7.$('.page-current .go').click((e) => {
+                            stamp('go');
+                        });
+
+                        $f7.$('.page-current .timestamp.edit').click((e) => {
+                            edit(e);
+                        });
+                    });
+            })
+            .catch(ex => $f7.store.dispatch('catchDb', ex));
+    };
+
+    const renderAll = function() {
+        let out = '';
+        let total = 0;
+
+        list.stamps.map((item, k) => {
+            let s = $f7.mod.helper.getDateInfos(item.start);
+            let e = item.end ? $f7.mod.helper.getDateInfos(item.end) : null;
+
+            if (s.date != oldDate) {
+                if (oldDate) {
+                    out += `</div>
+                        <div class="bt-right">Total ${$f7.mod.helper.showHM(total)}</div>
+                    </div>
+                    </div>`;
+
+                    total = 0;
+                }
+
+                out += `<div class="timeBox">
+                <div class="dateBox">
+                    <div class="day">${s.day}</div>
+                    <div class="date">${s.date}</div>
+                    <div class="month">${s.month}</div>
+                </div>
+                <div class="distanceBox"></div>
+                <div class="content">
+                    <div class="title">${$f7.mod.helper.lng('stamp')}</div>
+                    <div class="entries">`
+            }
+
+            out += `<p class="timestamp edit" data-i="${k}">
+                <i class="f7-icons">clock</i>
+                <span class="from">${s.time}</span>
+                <span class="to">
+                    ${e && e.time ? e.time : `<button class="green go">${$f7.mod.helper.lng('go')}</button>`}
+                </span>
+                <span class="action">${$f7.mod.helper.lng('timeType' + item.type)}</span>
+            </p>`
+
+            oldDate = s.date;
+            total += (item.end ? new Date(item.end) : new Date()) - new Date(item.start);
+        });
+
+        out += `</div>
+                <div class="bt-right">Total ${$f7.mod.helper.showHM(total)}</div>
+            </div>
+            </div>`;
+
+        $f7.$('.cards-list').append(out);
+    };
+
+    const stamp = function (act) {
+        if(!act) {
+                $f7.mod.timestamp.stamp(list)
+                    .then(res => {
+                        oldDate = null;
+                        getMonth();
+                    })
+                    .catch(ex => $f7.store.dispatch('catchDb', ex));
+
+        } else {
+            //no start stamp exists
+            let last = list.stamps[0];
+
+            if(!last || last.end) {
+                edit(null, true);
+
+            } else {
+                $f7.mod.timestamp.stamp(list, act)
+                    .then(res => {
+                        oldDate = null;
+                        getMonth();
+                    })
+                    .catch(ex => $f7.store.dispatch('catchDb', ex));
+            }
+        }
+    };
+
+    const previous = function () {
+        //minus 24h
+        let start = new Date(new Date(doc.start).getTime() - (24 * 60 * 60 *1000));
+        doc.start = start;
+        doc.s = $f7.mod.helper.getDateInfos(start);
+
+        let end = new Date(new Date(doc.end).getTime() - (24 * 60 * 60 *1000));
+        doc.end = end;
+        doc.e = $f7.mod.helper.getDateInfos(end);
+
+//        let t = doc.s.time.split(':');
+//        pickerStart.setValue([t[0], t[1]]);
+//
+//        t = doc.e.time.split(':');
+//        pickerEnd.setValue([t[0], t[1]]);
+
+        oldDate = null;
+
+        $update();
+    };
+
+    const next = function () {
+        //plus 24h
+        let start = new Date(new Date(doc.start).getTime() + (24 * 60 * 60 *1000));
+        doc.start = start;
+        doc.s = $f7.mod.helper.getDateInfos(start);
+
+        let end = new Date(new Date(doc.end).getTime() + (24 * 60 * 60 *1000));
+        doc.end = end;
+        doc.e = $f7.mod.helper.getDateInfos(end);
+
+//        let t = doc.s.time.split(':');
+//        pickerStart.setValue([t[0], t[1]]);
+//
+//        t = doc.e.time.split(':');
+//        pickerEnd.setValue([t[0], t[1]]);
+
+        oldDate = null;
+
+        $update();
+    };
+
+    const edit = function (ev, n) {
+        let s, e;
+
+        if(n) {
+            e = new Date();
+            s = new Date(e.getTime() - (4 * 60 *60 * 1000)); //4h before
+
+            doc = {
+                start: s,
+                end: e,
+                toCheck: true,
+                s: $f7.mod.helper.getDateInfos(s),
+                e: $f7.mod.helper.getDateInfos(e)
+            };
+
+        } else {
+            _i = ev.currentTarget.getAttribute('data-i');
+            doc = list.stamps[_i];
+            doc.s = $f7.mod.helper.getDateInfos(doc.start);
+            s = new Date(doc.start);
+            doc.e = $f7.mod.helper.getDateInfos(doc.end);
+            e = new Date(doc.end);
+        }
+
+        oldDate = null; //reset
+
+        $update()
+            .then(() => {
+                 pickerStart = $f7.picker.create({
+                    containerEl: '#startPicker',
+                    inputEl: '#startPickerTime',
+                    toolbar: false,
+                    rotateEffect: true,
+                    value: [
+                        s.getHours(),
+                        ('0' + s.getMinutes()).substr(-2)
+                    ],
+//                    formatValue: function (values, displayValues) {
+//                        return displayValues[0] + ' ' + values[1] + ', ' + values[2] + ' ' + values[3] + ':' + values[4];
+//                    },
+                    cols: [
+                        // Hours
+                        {
+                            values: (function () {
+                                var arr = [];
+                                for (var i = 0; i <= 23; i++) { arr.push(i); }
+                                return arr;
+                            })(),
+                        },
+                        // Divider
+                        {
+                            divider: true,
+                            content: ':'
+                        },
+                        // Minutes
+                        {
+                            values: (function () {
+                                var arr = [];
+                                for (var i = 0; i <= 59; i++) { arr.push(i < 10 ? '0' + i : i); }
+                                return arr;
+                            })(),
+                        }
+                    ],
+                    on: {
+                        change: function (picker, values, displayValues) {
+                            let start = new Date(doc.start);
+                            start.setHours(values[0]);
+                            start.setMinutes(values[1]);
+
+                            doc.start = start.toISOString();
+                            doc.s = $f7.mod.helper.getDateInfos(start);
+                        },
+                    }
+                });
+
+                pickerEnd = $f7.picker.create({
+                    containerEl: '#endPicker',
+                    inputEl: '#endPickerTime',
+                    toolbar: false,
+                    rotateEffect: true,
+                    value: [
+                        e.getHours(),
+                        ('0' + e.getMinutes()).substr(-2)
+                    ],
+//                    formatValue: function (values, displayValues) {
+//                        return displayValues[0] + ' ' + values[1] + ', ' + values[2] + ' ' + values[3] + ':' + values[4];
+//                    },
+                    cols: [
+                        // Hours
+                        {
+                            values: (function () {
+                                var arr = [];
+                                for (var i = 0; i <= 23; i++) { arr.push(i); }
+                                return arr;
+                            })(),
+                        },
+                        // Divider
+                        {
+                            divider: true,
+                            content: ':'
+                        },
+                        // Minutes
+                        {
+                            values: (function () {
+                                var arr = [];
+                                for (var i = 0; i <= 59; i++) { arr.push(i < 10 ? '0' + i : i); }
+                                return arr;
+                            })(),
+                        }
+                    ],
+                    on: {
+                        change: function (picker, values, displayValues) {
+                            let end = new Date(doc.end);
+                            end.setHours(values[0]);
+                            end.setMinutes(values[1]);
+
+                            doc.end = end.toISOString();
+                            doc.e = $f7.mod.helper.getDateInfos(end);
+                        },
+                    }
+                });
+            });
+    };
+
+    const stampEdit = function () {
+        $f7.mod.timestamp.stampEdit(list, doc, _i)
+            .then(res => {
+                doc = null;
+                _i = null;
+                oldDate = null;
+
+                getMonth();
+            })
+            .catch(ex => $f7.store.dispatch('catchDb', ex));
+    };
+
+    $on('pageInit', () => {
+        getMonth();
+    });
+
+return $render;
+
+};
+</script>
